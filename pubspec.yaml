@@ -1,0 +1,60 @@
+name: flutter_srceng_app
+description: "Source Engine Launcher"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+# 煞笔 一样的flutter yaml 代码缩进
+# 78+13 一样的 flutter 
+# flutter 开发者 是tmd 使雪者吗
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  file_selector: ^1.0.3
+  shared_preferences: ^2.2.2
+  cupertino_icons: ^1.0.2
+  permission_handler: ^12.0.0  # 确保支持 Android 15
+  device_info_plus: ^11.4.0 # 用于检测Android版本
+#  flutter_splash_screen: ^3.0.0 # 专业开屏动画库[3](@ref)
+  flutter_native_splash: ^2.3.3  
+  
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true  
+  assets:                     
+    - assets/images/  
+    - assets/ic_launcher.png
+
+     
+flutter_native_splash:
+  image: assets/ic_launcher.png
+  image_dark: assets/ic_launcher.png
+  color: "#dfc6a7"
+  color_dark: "#121212"
+  android: true
+  android_12:
+    color: "#dfc6a7"
+    color_dark: "#121212"
+  
+    
+  #   - images/a_dot_ham.jpeg
+
+
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700

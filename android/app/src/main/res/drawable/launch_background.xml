@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/white" /> <!-- 背景色 -->
+    <!-- 关键：取消注释并指向 ic_launcher -->
+    <item>
+        <bitmap 
+            android:gravity="center" 
+            android:src="@drawable/ic_launcher" /> <!-- 替换为你的图标名 -->
+    </item>
+</layer-list>

@@ -1,0 +1,238 @@
+// 首先添加自定义圆角下划线指示器
+class _RoundedUnderlineTabIndicator extends Decoration {
+  final BorderSide borderSide;
+  final EdgeInsetsGeometry insets;
+  final double extraWidth;
+  final double radius;
+
+  const _RoundedUnderlineTabIndicator({
+    this.borderSide = const BorderSide(width: 2.0, color: Colors.orange),
+    this.insets = EdgeInsets.zero,
+    this.extraWidth = 0,
+    this.radius = 4,
+  });
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _UnderlinePainter(
+      borderSide: borderSide,
+      insets: insets,
+      extraWidth: extraWidth,
+      radius: radius,
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _UnderlinePainter extends BoxPainter {
+  final BorderSide borderSide;
+  final EdgeInsetsGeometry insets;
+  final double extraWidth;
+  final double radius;
+
+  _UnderlinePainter({
+    required this.borderSide,
+    required this.insets,
+    required this.extraWidth,
+    required this.radius,
+    VoidCallback? onChanged,
+  }) : super(onChanged);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    assert(configuration.size != null);
+    final Rect rect = offset & configuration.size!;
+    final resolvedInsets = insets.resolve(Directionality.of(TextDirection.ltr));
+    
+    // 计算扩展宽度后的位置
+    final indicatorWidth = configuration.size!.width + extraWidth;
+    final leftOffset = extraWidth / 2;
+    
+    // 创建矩形路径
+    final Path path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          rect.left - leftOffset + resolvedInsets.left,
+          rect.bottom - borderSide.width,
+          indicatorWidth,
+          borderSide.width,
+        ),
+        Radius.circular(radius),
+      ));
+
+    // 绘制下划线
+    final paint = Paint()
+      ..color = borderSide.color
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path, paint);
+  }
+}
+
+
+TabBar(
+  controller: _tabController,
+  isScrollable: true,
+  indicator: _RoundedUnderlineTabIndicator(
+    borderSide: BorderSide(width: 2, color: Colors.orange),
+    insets: EdgeInsets.symmetric(horizontal: 0),
+    extraWidth: 8, // 左右各增加4像素宽度
+    radius: 4, // 圆角半径
+  ),
+  indicatorSize: TabBarIndicatorSize.label, // 确保与标签对齐
+  labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+  tabs: [
+    Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.settings, size: 18),
+          SizedBox(width: 6),
+          Text("游戏设置"),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.more_horiz, size: 18),
+          SizedBox(width: 6),
+          Text("其他"),
+        ],
+      ),
+    ),
+  ],
+)
+
+
+
+根据用户上传的错误图片，我们解决了多个ticker的问题（使用TickerProviderStateMixin替代SingleTickerProviderStateMixin）。现在，用户要求调整TabBar的下划线指示器（indicator）的宽度，希望宽度比标签文字略宽（label + 2）。但是，在Flutter中，
+"indicatorSize" 属性只接受 
+"TabBarIndicatorSize.tab" 或 
+"TabBarIndicatorSize.label" 两种枚举值，不能直接设置数值。因此，我们需要使用自定义指示器来实现额外的宽度。
+
+解决方案：自定义指示器实现扩展宽度
+
+TabBar(
+  controller: _tabController,
+  isScrollable: true,
+  // 使用自定义指示器（下划线）
+  indicator: CustomUnderlineTabIndicator(
+    borderSide: BorderSide(
+      width: 2,
+      color: Colors.orange,
+    ),
+    // 通过这个参数控制宽度扩展
+    extraWidth: 4, // 每边扩展2，总宽度增加4
+  ),
+  indicatorSize: TabBarIndicatorSize.label, // 基准宽度基于label
+  labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+  tabs: [
+    // ...两个Tab保持不变...
+  ],
+)
+
+自定义指示器代码实现
+
+在文件顶部（或单独文件）添加以下自定义类：
+
+class CustomUnderlineTabIndicator extends Decoration {
+  final BorderSide borderSide;
+  final EdgeInsetsGeometry insets;
+  final double extraWidth; // 在label宽度的基础上增加的总宽度（左右各加extraWidth/2）
+
+  const CustomUnderlineTabIndicator({
+    this.borderSide = const BorderSide(width: 2.0, color: Colors.orange),
+    this.insets = EdgeInsets.zero,
+    this.extraWidth = 0,
+  });
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _UnderlinePainter(
+      borderSide: borderSide,
+      insets: insets,
+      extraWidth: extraWidth,
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _UnderlinePainter extends BoxPainter {
+  final BorderSide borderSide;
+  final EdgeInsetsGeometry insets;
+  final double extraWidth;
+
+  _UnderlinePainter({
+    required this.borderSide,
+    required this.insets,
+    required this.extraWidth,
+    VoidCallback? onChanged,
+  }) : super(onChanged);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    assert(configuration.size != null);
+    final Rect rect = offset & configuration.size!;
+    final resolvedInsets = insets.resolve(Directionality.of(TextDirection.ltr));
+    final double indicatorWidth = configuration.size!.width + extraWidth;
+    final double horizontalOffset = (configuration.size!.width - indicatorWidth) / 2;
+    final Rect indicator = Rect.fromLTWH(
+      rect.left + resolvedInsets.left + horizontalOffset,
+      rect.bottom - borderSide.width,
+      indicatorWidth,
+      borderSide.width,
+    );
+    final Paint paint = borderSide.toPaint()
+      ..strokeCap = StrokeCap.round; // 线条两端圆角
+    canvas.drawLine(indicator.bottomLeft, indicator.bottomRight, paint);
+  }
+}
+
+修改后的TabBar属性说明
+
+indicator: CustomUnderlineTabIndicator(
+  borderSide: BorderSide(
+    width: 2,
+    color: Colors.orange,
+  ),
+  extraWidth: 4, // 总宽度增加4（两侧各2）
+),
+indicatorSize: TabBarIndicatorSize.label, // 以标签宽度为基准
+
+效果对比
+
+默认效果 自定义扩展效果
+[image] https://img-blog.csdnimg.cn/2021020415321883.png [image] https://img-blog.csdnimg.cn/20210204153515869.png
+宽度与文本相同 宽度比文本宽4像素
+
+完整代码集成
+
+将自定义类添加到文件后，替换TabBar的indicator属性即可。这样既保留了圆角线端（通过
+"StrokeCap.round"），又能精确控制宽度扩展。同时，其他所有功能（如标签图标、工具栏隐藏等）保持不变。
+
+TabBar(
+  controller: _tabController,
+  indicator: RoundedUnderlineTabIndicator( // Use public class name
+    width: 28, 
+    radius: 4,
+    borderSide: BorderSide(width: 3, color: Colors.orange),
+  ),
+  // Other parameters...
+  tabs: [ /* Your tabs */ ]
+)
+
+TabBar(
+  controller: _tabController,
+  isScrollable: true,
+  indicator: BoxDecoration(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(8)), // 上圆角
+    color: Colors.orange.withOpacity(0.8),                      // 下划线颜色
+  ),
+  indicatorSize: TabBarIndicatorSize.label,                     // 与标签同宽
+  labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+  tabs: [
+    // ...Tab定义保持不变...
+  ],
+)
+

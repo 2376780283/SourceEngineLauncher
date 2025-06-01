@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style
+        name="LaunchTheme"
+        parent="@android:style/Theme.Light.NoTitleBar">
+
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <!--item name="android:windowSplashScreenBackground">@color/splash_bg</item-->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
+
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- 解决底部沉浸问题[3](@ref) -->
+        <item name="android:windowTranslucentStatus">true</item>
+
+
+    </style>
+
+    <style
+        name="NormalTheme"
+        parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <!--item name="android:windowSplashScreenBackground">@color/splash_bg</item-->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
+
+    </style>
+</resources>

@@ -1,0 +1,1 @@
+/data/data/com.termux/files/home/sourcr-engine-launcher/build/app/intermediates/cxx/Debug/45473t2x/obj/armeabi-v7a

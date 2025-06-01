@@ -1,0 +1,2 @@
+/data/data/com.termux/files/home/sourcr-engine-launcher/android/app/.cxx/Debug/22584u1m/x86/CMakeFiles/edit_cache.dir
+/data/data/com.termux/files/home/sourcr-engine-launcher/android/app/.cxx/Debug/22584u1m/x86/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,73 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.example.flutter_srceng_app"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkPath "/data/data/com.termux/files/home/android-ndk-r27b/"
+    ndkVersion flutter.ndkVersion
+    ndkVersion = "27.1.12297006"
+       compileSdk 35
+       buildToolsVersion="35.0.0"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        applicationId "com.example.flutter_srceng_app"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    // 启用 ViewBinding 替代
+
+    buildFeatures {
+        viewBinding true
+    }
+   
+
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3"
+
+}
